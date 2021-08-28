@@ -28,4 +28,81 @@ Java下的反射加强工具库，功能包括：
 
 ## 使用
 
-代码在[这里](https://github.com/fishedee/reflection-boost/tree/master/reflection-boost-sample)
+```java
+package com.fishedee.reflection_boost;
+
+import java.util.List;
+import java.util.Map;
+
+public class MyTpl<T1, T2 extends Nothing> {
+
+    public Map<T1,List<T2>> data;
+
+    public void go(T1 a){
+
+    }
+
+    public void go2(T2 a, List<T2> b){
+
+    }
+}
+```
+
+一个复杂的泛型
+
+```java
+package com.fishedee.reflection_boost;
+
+public class MyTplImpl  extends MyTpl<String,Long>{
+}
+```
+
+一个泛型实现类
+
+```java
+
+public class ExtractorTest {
+    @Test
+    public void basicTest(){
+        GenericActualArgumentExtractor extractor = new GenericActualArgumentExtractor(MyTplImpl.class,MyTpl.class);
+
+        assertEquals(extractor.getActualTypeLength(),2);
+        assertEquals(extractor.getActualType(0),String.class);
+        assertEquals(extractor.getActualType(1),Long.class);
+
+
+        assertEquals(extractor.getActualType("T1"),String.class);
+        assertEquals(extractor.getActualType("T2"),Long.class);
+    }
+}
+```
+
+使用GenericActualArgumentExtractor，可以获取实际的泛型参数
+
+```java
+public class FillerTest {
+
+    private GenericFormalArgumentFiller filler;
+    private Class clazz;
+
+    @BeforeEach
+    public void init(){
+        filler = new GenericFormalArgumentFiller(new GenericActualArgumentExtractor(MyTplImpl.class,MyTpl.class));
+        clazz = MyTpl.class;
+    }
+
+
+    @Test
+    public void goMethodTest() throws Exception{
+        Method method = clazz.getMethod("go",Object.class);
+        Type firstArgument = method.getGenericParameterTypes()[0];
+        Type firstActualArgument = filler.fillType(firstArgument);
+        assertEquals(firstActualArgument.getTypeName(),"java.lang.String");
+    }
+}
+```
+
+使用GenericFormalArgumentFiller，可以进行获取实际的范例实例
+
+
+
