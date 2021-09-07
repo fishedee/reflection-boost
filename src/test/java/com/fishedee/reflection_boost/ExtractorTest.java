@@ -19,6 +19,22 @@ public class ExtractorTest {
     }
 
     @Test
+    public void noTplTest(){
+        GenericActualArgumentExtractor extractor = new GenericActualArgumentExtractor(Nothing2.class,Nothing.class);
+
+        assertEquals(extractor.getActualTypeLength(),0);
+
+        GenericActualArgumentExtractor extractor2 = new GenericActualArgumentExtractor(Nothing.class,Nothing.class);
+
+        assertEquals(extractor2.getActualTypeLength(),0);
+
+        GenericActualArgumentExtractor extractor3 = new GenericActualArgumentExtractor(Nothing2.class,Nothing2.class);
+
+        assertEquals(extractor3.getActualTypeLength(),0);
+    }
+
+
+    @Test
     public void extendTest(){
         GenericActualArgumentExtractor extractor = new GenericActualArgumentExtractor(MyTplImpl2.class,MyTpl.class);
 

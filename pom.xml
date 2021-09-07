@@ -4,7 +4,7 @@
 
   <groupId>com.fishedee.reflection_boost</groupId>
   <artifactId>reflection-boost</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
   <packaging>jar</packaging>
 
   <name>reflection-boost</name>
