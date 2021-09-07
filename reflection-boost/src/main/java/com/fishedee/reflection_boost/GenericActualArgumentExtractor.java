@@ -25,7 +25,11 @@ public class GenericActualArgumentExtractor {
         this.genericClass = genericClass;
 
         this.genericInstanceType = this.extractInstanceGeneric();
-        this.actualArguments = this.extractArgument();
+        if( genericInstanceType != null) {
+            this.actualArguments = this.extractArgument();
+        }else{
+            this.actualArguments = new ArrayList<>();
+        }
     }
 
     public int getActualTypeLength(){
@@ -63,16 +67,16 @@ public class GenericActualArgumentExtractor {
     }
 
     private ParameterizedType extractInstanceGeneric(){
-        Type parentType = null;
-        Class currentClazz = instanceClass;
+        Type parentType = instanceClass;
         while( true ){
-            parentType = currentClazz.getGenericSuperclass();
             if( parentType instanceof Class ) {
                 //普通父类型
-                if (parentType == Object.class) {
+                if( parentType == genericClass ) {
+                    return null;
+                }else if (parentType == Object.class) {
                     throw new ReflectionBoostException("Chould not found genericInstanceType: " + instanceClass + "," + genericClass);
                 } else {
-                    currentClazz = (Class) parentType;
+                    parentType = ((Class<?>) parentType).getGenericSuperclass();
                 }
             }else if( parentType instanceof ParameterizedType ){
                 //泛型父类型
@@ -81,7 +85,7 @@ public class GenericActualArgumentExtractor {
                 if( rawType == genericClass){
                     return parentParameterizedType;
                 }else{
-                    currentClazz = rawType;
+                    parentType = rawType.getGenericSuperclass();
                 }
             }else{
                 throw new ReflectionBoostException("Unknown parentType "+parentType);

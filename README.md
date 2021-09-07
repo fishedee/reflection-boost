@@ -20,7 +20,7 @@ Java下的反射加强工具库，功能包括：
 <dependency>
     <groupId>com.github.fishedee</groupId>
     <artifactId>reflection-boost</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 </dependency>
 ```
 
